@@ -20,6 +20,8 @@ huebar = {
 
     rgb         : [255,255,255],
     hue         : 0,
+    saturation  : 255,
+    value       : 255,
     
     swiperHeight      : 100,
     swiperWidth       : 100,
@@ -30,8 +32,15 @@ huebar = {
     {
         this.options = options;
         this.initDefaultOptions();
+        this.getSwiperDims();
+    },
+
+    getSwiperDims : function()
+    {
+        var container = document.getElementById(this.options.container);
+        this.swiperHeight = container.offsetHeight;
+        this.swiperWidth = container.offsetWidth;
         this.displaySwipe();
-        this.initEvents();
     },
     
     initDefaultOptions : function()
@@ -41,9 +50,10 @@ huebar = {
         this.options.whiteHeight = this.options.whiteHeight || 10;
         this.options.blackHeight = this.options.blackHeight || 10;
         this.options.showBorder = this.options.showBorder || true;
+        this.options.template = this.options.template || 'basic';
         this.options.mouseUpCallback = this.options.mouseUpCallback || function (){return};
-        this.swiperHeight = this.options.height || 100;
-        this.swiperWidth = this.options.width || 100;
+        this.saturation = this.options.saturation || 255;
+        this.value = this.options.value || 255;
     },
     
     displaySwipe : function()
@@ -56,21 +66,43 @@ huebar = {
         picker.style.width = (this.swiperWidth+10)+"px";
         picker.style.height = "1px";
         picker.style.background = "#fff";
+        if(this.style[this.options.template].showDropShadow)
+        {
+            var boxshadowprop=this.getsupportedprop(['boxShadow', 'MozBoxShadow', 'WebkitBoxShadow'])
+            picker.style[boxshadowprop]="1px 1px 5px 0px #818181";
+        }
+        if(this.style[this.options.template].showRounded)
+        {
+            var boxshadowprop=this.getsupportedprop(['borderRadius', 'MozBorderRadius'])
+            picker.style[boxshadowprop]="2px";
+        }
         picker.id = this.pickerId;
 
         var boundary = document.createElement("div");
         boundary.style.position = "relative";
+        boundary.style.display = "block";
         boundary.style.top = "11px";
         boundary.style.left = "12px";
         boundary.style.width = this.swiperWidth+"px";
-        boundary.style.height = this.swiperHeight+'px';
-        boundary.style.background = "red";
+        boundary.style.height = this.swiperHeight+"px";
+        boundary.style.background = "black";
         boundary.style.cursor = "pointer";
-        if(this.options.showBorder){boundary.style.border = '1px solid #000';}
+        if(this.style[this.options.template].showBorder){boundary.style.border = '1px solid #000';}
+        if(this.style[this.options.template].showDropShadow)
+        {
+            var boxshadowprop=this.getsupportedprop(['boxShadow', 'MozBoxShadow', 'WebkitBoxShadow'])
+            boundary.style[boxshadowprop]="5px 5px 5px 2px #818181";
+        }
+        if(this.style[this.options.template].showRounded)
+        {
+            var boxshadowprop=this.getsupportedprop(['borderRadius', 'MozBorderRadius'])
+            boundary.style[boxshadowprop]="5px";
+        }
         boundary.id = this.boundaryId;
         boundary.appendChild(picker);
         var container = document.getElementById(this.options.container);
         container.appendChild(boundary);
+        this.initEvents();
     },
     
     initEvents : function()
@@ -134,10 +166,8 @@ console.log('mouseYPosition', boundaryY, _y);
     
     calculateHue : function (sliderPosition)
     {
-        var saturation = 255;
-        var value = 255;
-        
-        
+        var saturation = this.saturation;
+        var value = this.value;
         if (sliderPosition < this.options.blackHeight)
         {
             this.hue = 0;
@@ -286,6 +316,36 @@ console.log('ggg', sliderHeight , sliderPercentage, this.options.whiteHeight,thi
     RGBObject : function()
     {
         return {'red' : this.rgb[0], 'green' : this.rgb[1], 'blue' : this.rgb[2]};
+    },
+    
+    style : {
+        basic : {
+            showDropShadow : false,
+            showBorder : true,
+            showRounded : false
+        },
+        
+        lifted : {
+            showDropShadow : true,
+            showBorder : true,
+            showRounded : false
+        },
+        
+        modern : {
+            showDropShadow : true,
+            showBorder : true,
+            showRounded : true
+        }
+    },
+    getsupportedprop : function(proparray)
+    {
+        var root=document.documentElement;
+        for (var i=0; i<proparray.length; i++)
+        {
+            if (typeof root.style[proparray[i]]=="string")
+            {
+                return proparray[i]
+            }
+        }
     }
-
 } 
