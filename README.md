@@ -1,5 +1,8 @@
 # Huebar v1.1
-## easy to use pure javacript color picker with no need for JQUERY.
+
+**The easy-to-use pure javacript colour picker with no need for jQuery.**
+
+---
 
 ### Usage:
     huebar.init({options});
@@ -12,21 +15,23 @@
         mouseUpCallback  -  function - callback function on mouseup
 
 ### Example:
-            huebar.init({
-                container       : 'swipeContainer',
-                saturation      : 000,
-                val             : 000,
-                template        : 'modern',
-                mouseUpCallback : function ()
-                {
-                    huebar.paintElement('backgroundColor');
-                    return;
-                }
-            });
+
+    huebar.init({
+        container       : 'swipeContainer',
+        saturation      : 000,
+        val             : 000,
+        template        : 'modern',
+        mouseUpCallback : function ()
+        {
+            huebar.paintElement('backgroundColor');
+            return;
+        }
+    });
 
 ### Methods:
-  huebar.paintElement(destination id - string)    set the background color of the passed element.
-  
-  huebar.cssRGB()                                 Get RGB as css string.
-  
-  huebar.RGBObject()                              Get RGB as object.
+
+    huebar.paintElement(destination id - string)    set the background color of the passed element.
+    
+    huebar.cssRGB()                                 Get RGB as css string.
+    
+    huebar.RGBObject()                              Get RGB as object.
